@@ -2,11 +2,15 @@ env:
   open:
     STORAGE: local
     DISABLE_API: false
+
 persistence:
   enabled: true
   storageClass: "standard"
   accessMode: ReadWriteOnce
   size: 8Gi
+
+securityContext:
+  enabled: true
 
 ingress:
   enabled: true
