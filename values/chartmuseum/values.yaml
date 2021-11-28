@@ -1,7 +1,7 @@
 env:
   open:
     STORAGE: local
-    DISABLE_API=false
+    DISABLE_API: false
 persistence:
   enabled: true
   storageClass: "standard"
