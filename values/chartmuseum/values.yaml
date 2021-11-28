@@ -1,3 +1,11 @@
+env:
+  open:
+    STORAGE: local
+persistence:
+  enabled: true
+  accessMode: ReadWriteOnce
+  size: 8Gi
+
 ingress:
   enabled: true
   annotations:
