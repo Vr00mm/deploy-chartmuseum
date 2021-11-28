@@ -33,6 +33,7 @@ jobs:
           helm upgrade --install \
             chartmuseum chartmuseum/chartmuseum \
             --namespace chartmuseum --create-namespace \
+            -f ./values/chartmuseum/values.yaml \
             --set "ingress.host.name=chartmuseum.${{ secrets.K8S_DOMAIN }}" \
             --set "ingress.tls[0].hosts[0]=chartmuseum.${{ secrets.K8S_DOMAIN }}" \
             --set "env.secret.BASIC_AUTH_USER=${{ secrets.CHARTMUSEUM_USERNAME }}" \
