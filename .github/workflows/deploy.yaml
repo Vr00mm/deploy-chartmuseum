@@ -10,7 +10,7 @@ on:
       - 'main'
 jobs:
   deploy-chartmuseum:
-    name: "Deploy Cert Manager"
+    name: "Deploy Chartmuseum"
     runs-on: "ubuntu-latest"
     container:
       image: vr00mm/docker-helm-client:v0.1.0
