@@ -1,0 +1,44 @@
+# .github/workflows/deploy.yml
+name: Deploy
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'main'
+  pull_request:
+    branches:
+      - 'main'
+jobs:
+  deploy-cert-manager:
+    name: "Deploy Cert Manager"
+    runs-on: "ubuntu-latest"
+    container:
+      image: vr00mm/docker-helm-client:v0.1.0
+      env:
+        KUBECONFIG: "/tmp/kubeconfig"
+    steps:
+      - name: Load Workspace
+        uses: actions/checkout@v2
+      - name: Init Kubeconfig
+        run: |
+          echo "${{ secrets.KUBECONFIG }}" > /tmp/kubeconfig
+          chmod 0600 /tmp/kubeconfig
+      - name: Add prometheus-community Repository
+        run: |
+          helm repo add chartmuseum https://chartmuseum.github.io/charts
+          helm repo update
+
+      - name: Deploy Chartmuseum
+        run: |
+          helm upgrade --install \
+            chartmuseum chartmuseum/chartmuseum \
+            --namespace chartmuseum --create-namespace \
+            --set "ingress.host.name=chartmuseum.${{ secrets.K8S_DOMAIN }}" \
+            --set "ingress.tls[0].hosts[0]=chartmuseum.${{ secrets.K8S_DOMAIN }}" \
+            --set "env.secret.BASIC_AUTH_USER=${{ secrets.CHARTMUSEUM_USERNAME }}" \
+            --set "env.secret.BASIC_AUTH_PASS=${{ secrets.CHARTMUSEUM_PASSWORD }}"
+
+          kubectl -n chartmuseum wait --for=condition=Ready pods --all
+
+      - name: Delete Kubeconfig
+        run: rm /tmp/kubeconfig
