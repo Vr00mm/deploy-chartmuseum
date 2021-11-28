@@ -3,6 +3,7 @@ env:
     STORAGE: local
 persistence:
   enabled: true
+  storageClass: "standard"
   accessMode: ReadWriteOnce
   size: 8Gi
 
